@@ -22,7 +22,7 @@ This method, though sparse, lays the groundwork for future enhancements, such as
 
 ## Dataset
 
-The dataset for this project is sourced from the [CVPR MetaFood 3D Challenge (Kaggle)](https://www.kaggle.com/competitions/cvpr-metafood-3d-food-reconstruction-challenge/data). The dataset consists of 200-image sets per food item, captured from various angles, ensuring thorough coverage for the 3D reconstruction process. Each image set includes:
+The dataset for this project is sourced from the [CVPR MetaFood 3D Challenge (Kaggle)](https://www.kaggle.com/competitions/cvpr-metafood-3d-food-reconstruction-challenge/data) and other sources. The dataset consists of 200-image sets per food item, captured from various angles, ensuring thorough coverage for the 3D reconstruction process. Each image set includes:
 
 - **Checkerboard Calibration**: A checkerboard with known dimensions placed next to the food object, essential for accurate scale calibration.
 - **Masked Images**: Highlighting the food object, which aids in separating the object from the background during reconstruction.
