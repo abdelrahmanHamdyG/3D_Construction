@@ -1,0 +1,10 @@
+assets
+3d_construction_pipeline/masks
+*/__pycache__
+*.pyc
+*.ply
+checkpoints
+*.pth
+.env
+3d_construction_pipeline/ml-depth-pro
+
