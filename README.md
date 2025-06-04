@@ -1,81 +1,127 @@
-# 3D Food Reconstruction from 2D Images
+# 3D Food Reconstruction Pipeline
 
-## Project Overview
-
-**VIP-IPA: 3D Food Reconstruction From 2D Images** is a project aimed at reconstructing 3D models of food items by leveraging classical geometric techniques. The project was developed **from scratch** and focuses on **sparse reconstruction**, meaning the generated 3D models are built from key points rather than dense surfaces. This approach is computationally efficient and provides a foundational understanding of 3D reconstruction pipelines.
-
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Dataset](#dataset)
-- [Methodology](#methodology)
-  - [Camera Calibration](#camera-calibration)
-  - [Feature Matching](#feature-matching)
-  - [Structure From Motion (SfM)](#structure-from-motion-sfm)
-- [References](#references)
-
-## Introduction
-
-The project applies **incremental structure from motion (SfM)** to construct 3D models from sets of 2D images taken from different perspectives. By gradually adding images to the reconstruction process, the model is refined and enhanced, leading to more accurate 3D representations of the target objects. 
-
-This method, though sparse, lays the groundwork for future enhancements, such as dense reconstruction or texture mapping, to create more detailed models.
-
-## Dataset
-
-The dataset for this project is sourced from the [CVPR MetaFood 3D Challenge (Kaggle)](https://www.kaggle.com/competitions/cvpr-metafood-3d-food-reconstruction-challenge/data) and other sources. The dataset consists of 200-image sets per food item, captured from various angles, ensuring thorough coverage for the 3D reconstruction process. Each image set includes:
-
-- **Checkerboard Calibration**: A checkerboard with known dimensions placed next to the food object, essential for accurate scale calibration.
-- **Masked Images**: Highlighting the food object, which aids in separating the object from the background during reconstruction.
-- **Depth Data**: While depth images are provided, the current project focuses on sparse 3D reconstruction and does not incorporate depth data for dense modeling.
-
-Sample images from the dataset are shown below:
+A computer vision pipeline that reconstructs detailed 3D models of food objects from multiple RGB images captured around the object. This project combines modern deep learning techniques with classical computer vision methods to create accurate 3D representations of food items.
 
 <p align="center">
-  <img src="https://github.com/abdelrahmanHamdyG/Structure-From-motion-/blob/master/Dataset%20sample-Nachos.jpg?raw=true" width="45%" />
-  <img src="https://github.com/abdelrahmanHamdyG/Structure-From-motion-/blob/master/Dataset-cupcake.jpg?raw=true" width="45%" />
+  <img src="https://github.com/abdelrahmanHamdyG/3D_Construction/blob/master/github_assets/22_images_allignment-ezgif.com-video-to-gif-converter.gif?raw=true" width="400"/>
 </p>
 
-A full detailed report of this project, along with the **3D reconstruction results**, is available at the following link:  
-**[3D Food Reconstruction Report and Results](https://drive.google.com/drive/u/1/folders/1LpuLYpan7PQoMBKjhf73XtZdkul945AO)**.
 
-## Methodology
+*Example: 3D reconstruction of a burger from multiple viewpoints*
 
-### Camera Calibration
+## What This Project Does
 
-Camera calibration is a crucial step in the 3D reconstruction pipeline, as it ensures accurate mapping between the 3D world and the 2D image plane. The project employs **Zhang's Method** for calibration, a widely-used algorithm that estimates the intrinsic and extrinsic parameters of the camera by analyzing images of a checkerboard pattern.
+This pipeline transforms a collection of photographs taken around a food object into a complete 3D digital model. The process mimics how humans perceive depth and shape by combining information from multiple viewpoints, but uses advanced algorithms to achieve precise reconstruction.
 
-#### Key Steps:
 
-1. **Capture Images**: Images of a checkerboard pattern are captured at different angles.
-2. **Corner Detection**: The **Harris corner detection** algorithm identifies key points on the checkerboard.
-3. **Homography Calculation**: The relationship between the 3D points and their 2D projections is computed.
-4. **Estimate Intrinsics**: The intrinsic parameters (focal length, optical center, skew) are estimated to finalize calibration.
 
-### Feature Matching
+**Multi-View 3D Reconstruction** is a fundamental problem in computer vision. When we take a photo, we lose the depth information - a 3D world gets projected onto a 2D image plane. This pipeline recovers that lost depth information by:
 
-Accurate feature matching is essential for aligning multiple images in the reconstruction process. This project employs **SIFT (Scale Invariant Feature Transform)**, known for its robustness and accuracy, especially in 3D reconstruction tasks.
+1. **Analyzing Multiple Perspectives**: Just like how our two eyes give us depth perception, multiple camera angles provide the geometric constraints needed to reconstruct 3D structure.
 
-#### SIFT Pipeline:
+2. **Deep Learning Depth Estimation**: neural networks can predict how far each pixel is from the camera, even from a single image. This provides dense depth information that traditional methods struggle to achieve.
 
-1. **Keypoint Detection**: Identify distinctive keypoints across the image at different scales.
-2. **Descriptor Generation**: Generate descriptors to characterize each keypoint.
-3. **Keypoint Matching**: Match keypoints across images based on descriptor similarity.
-4. **Outlier Removal**: Apply **RANSAC (Random Sample Consensus)** to filter out erroneous matches and ensure geometric consistency.
+3. **Feature Correspondence**: The system identifies the same physical points across different images, creating a network of 3D constraints that guide the reconstruction process.
 
-### Structure From Motion (SfM)
+4. **Point Cloud Generation**: Each image contributes a "point cloud" - a collection of 3D points that represent the visible surface of the object from that viewpoint.
 
-SfM constructs a sparse 3D model by incrementally adding images and triangulating points from multiple viewpoints. The core steps include:
+5. **Geometric Alignment**: All individual point clouds are aligned in a common 3D coordinate system, combining information from all viewpoints.
 
-- **Initial Pair Selection**: The process begins by selecting two images with maximum feature overlap.
-- **Incremental Addition**: New images are iteratively added, refining the 3D model by triangulating new keypoints.
-- **Bundle Adjustment**: A non-linear optimization method that minimizes reprojection error, ensuring the accuracy of the reconstructed model.
+6. **Surface Reconstruction**: The final step converts the point cloud data into a smooth, continuous 3D surface using mathematical techniques like Poisson reconstruction.
 
-SfM, although sparse, provides a reliable framework to understand 3D reconstruction principles and serves as a foundation for future dense modeling projects.
 
-## References
+## Sample Dataset
 
-1. Lowe, D. G. "Distinctive Image Features from Scale-Invariant Keypoints." 2004.  
-2. Zhang, Z. "A Flexible New Technique for Camera Calibration." IEEE PAMI, 2000.  
-3. Wu, C. C. "VisualSFM: A Visual Structure from Motion System."  
-4. CVPR MetaFood 3D Challenge (Kaggle).  
-5. Schöenberger, J. L., and Frahm, J. "Structure-from-Motion Revisited." CVPR 2016.
+Here are examples of the input images used for reconstruction:
+
+<table>
+  <tr>
+    <td><img src="https://github.com/abdelrahmanHamdyG/3D_Construction/blob/master/github_assets/Dataset-Burger_1.jpg?raw=true" width="300"/></td>
+    <td><img src="https://github.com/abdelrahmanHamdyG/3D_Construction/blob/master/github_assets/Dataset-Burger_2.jpg?raw=true" width="300"/></td>
+  </tr>
+</table>
+
+*Sample images showing different viewpoints of the food object*
+
+## Installation
+1. **Clone the repository**:
+```bash
+git clone (https://github.com/abdelrahmanHamdyG/3D_Construction)
+cd 3d_construction
+pip install -r requirements.txt
+```
+
+2. **Install SAM (Segment Anything Model)**:
+Follow the installation guide: https://github.com/facebookresearch/segment-anything
+
+3. **Install ML-Depth-Pro**:
+Follow the installation guide: https://github.com/apple/ml-depth-pro
+
+## Configuration
+
+Create a `.env` file in the project root:
+put your RGB images folder name 
+and put other values based on your installation 
+```env
+MODEL_TYPE=vit_h
+CHECKPOINT_PATH=models/SAM/sam_vit_h_4b8939.pth
+DEVICE=cuda
+IMAGE_FOLDER=assets/YourFoodName
+MASK_OUTPUT_DIR=masks
+DISPLAY_MAX_W=1024
+```
+
+
+### Run the Pipeline
+```bash
+cd 3d_construction
+python 3d_construction_pipeline/main.py
+```
+
+The system will automatically process your images through all reconstruction stages and generate the final 3D model.
+
+## How It Works
+
+###  Image Preprocessing
+Images are resized and prepared for optimal processing while maintaining quality and aspect ratios.
+
+###  Object Segmentation
+SAM  isolates the food object from the background in each image, creating  masks that focus reconstruction on the object of interest.
+
+### Depth Estimation
+ML-Depth-Pro analyzes each image to predict the distance of every pixel from the camera, creating detailed depth maps that capture the 3D structure.
+
+###  Feature Matching
+SuperGlue finds corresponding points between different images, establishing geometric relationships that constrain the 3D reconstruction.
+
+###  Point Cloud Generation
+Each image and its depth map are combined to create a 3D point cloud representing the visible surface from that viewpoint.
+
+### : Multi-View Alignment
+All point clouds are aligned in a common coordinate system using the feature correspondences and robust geometric algorithms.
+
+###  Surface Reconstruction
+The aligned point clouds are converted into a smooth 3D mesh using Poisson surface reconstruction, creating the final 3D model.
+
+
+## Detailed Technical Report
+
+For comprehensive technical details, methodology, and experimental results, please refer to our complete project report:
+
+**[📄 Full Project Report](https://drive.google.com/file/d/19eQZyZglpFhFLolu9x1D3EyblrnUnhlh/view?usp=sharing)**
+
+The report includes:
+- Detailed mathematical formulations
+- Experimental methodology and validation
+- Comparison with alternative approaches
+- Performance analysis and limitations
+
+
+## Acknowledgments
+
+This project builds upon 
+- Segment Anything Model
+- ML-Depth-Pro
+- SuperGlue
+- The broader computer vision research community
+
